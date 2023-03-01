@@ -1,0 +1,127 @@
+<section class='h-70' style='background-color: #eee;'>
+  <div class='container h-70'>
+    <div class='row d-flex justify-content-center align-items-center h-70'>
+      <div class='col-lg-12 col-xl-11 m-4'>
+        <div class='card text-black' style='border-radius: 25px;'>
+          <div class='card-body p-md-5'>
+            <div class='row justify-content-center'>
+              <div class='col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1'>
+                <p
+                  class='text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4'
+                >Регистрация</p>
+                <form class='mx-1 mx-md-4'>
+                  <div class='input-group mb-2 align-items-center'>
+                    <i class='far fa-image fa-lg me-3 fa-fw'></i>
+                    <input class='form-control' type='file' id='avatar' />
+                  </div>
+
+                  <div class='d-flex flex-row align-items-center mb-1'>
+                    <i class='fas fa-user fa-lg me-3 fa-fw'></i>
+                    <div class='form-outline flex-fill mb-0'>
+                      <input
+                        type='text'
+                        id='firstName'
+                        class='form-control'
+                        placeholder='Введите Ваше Имя'
+                      />
+                    </div>
+                  </div>
+                  <div class='d-flex flex-row align-items-center mb-4'>
+                    <i class='fa-lg me-3 fa-fw'></i>
+                    <div class='form-outline flex-fill mb-0'>
+                      <input
+                        type='text'
+                        id='lastName'
+                        class='form-control'
+                        placeholder='Введите Вашу Фамилию'
+                      />
+                    </div>
+                  </div>
+                  <div class='d-flex flex-row align-items-center mb-4'>
+                    <i class='fas fa-envelope fa-lg me-3 fa-fw'></i>
+                    <div class='form-outline flex-fill mb-0'>
+                      <input
+                        type='email'
+                        id='email'
+                        class='form-control'
+                        placeholder='Введите Ваш Email'
+                      />
+                    </div>
+                  </div>
+                  <div class='d-flex flex-row align-items-center mb-4'>
+                    <i class='fas fa-lock fa-lg me-3 fa-fw'></i>
+                    <div class='form-outline flex-fill mb-0'>
+                      <input
+                        type='password'
+                        id='password'
+                        class='form-control'
+                        placeholder='Введите Ваш пароль'
+                      />
+                    </div>
+                  </div>
+                  <div class='d-flex flex-row align-items-center mb-4'>
+                    <i class='fas fa-key fa-lg me-3 fa-fw'></i>
+                    <div class='form-outline flex-fill mb-0'>
+                      <input
+                        type='password'
+                        id='passwordRepeat'
+                        class='form-control'
+                        placeholder='Повторите Ваш пароль'
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class='d-flex justify-content-start mx-4 mb-3 mb-lg-4 ms-0'
+                  >
+                    <i class='fa-lg me-3 fa-fw'></i>
+                    <button
+                      id='btnRegister'
+                      type='button'
+                      class='btn btn-primary btn-lg'
+                    >Зарегистрироваться</button>
+                  </div>
+                </form>
+              </div>
+              <div
+                class='col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2'
+              >
+                <img
+                  src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp'
+                  class='img-fluid'
+                  alt='Sample image'
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  const messError = "В форме регистрации все поля обязательны для заполнения!";
+  const messSuccess = "Вы успешно зарегестрированы!"; const registerUser = () =>
+  { const firstName = document.getElementById("firstName"); const lastName =
+  document.getElementById("lastName"); const email =
+  document.getElementById("email"); const password =
+  document.getElementById("password"); const passwordRepeat =
+  document.getElementById("passwordRepeat"); const avatar =
+  document.getElementById("avatar"); if (firstName.value !== "" &&
+  lastName.value !== "" && email.value !== "" && password.value !== "" &&
+  passwordRepeat.value !== "" && avatar.value !== "") { if (password.value !==
+  passwordRepeat.value) { alert("Пароли не совпадают!"); } else { const formdata
+  = new FormData(); formdata.append("firstName", firstName.value);
+  formdata.append("lastName", lastName.value); formdata.append("email",
+  email.value); formdata.append("password", password.value);
+  formdata.append("role", "user"); formdata.append("avatar", avatar.files[0],
+  "http://localhost:3000/user-static/" + avatar.value); const requestOptions = {
+  method: 'POST', body: formdata, redirect: 'follow' }; const url =
+  "http://localhost:3000/users/create"; fetch(url, requestOptions)
+  .then(response => response.text()) .then(result => { if (result) {
+  alert(messSuccess); window.location.href =
+  "http://localhost:3000/users/login"; } console.log(result) }) .catch(error =>
+  console.log('error', error)); } } else { alert(messError); } }
+  document.getElementById("btnRegister").addEventListener("click",
+  registerUser);
+
+</script>

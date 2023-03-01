@@ -1,0 +1,135 @@
+<div class='card text-center mt-3'>
+
+  {{#if cookies}}
+    <img
+      style='object-fit: cover;'
+      src='http://localhost:3000{{cookies.user.avatar}}'
+      class='bi d-block mx-auto mb-1 mt-3 rounded-circle'
+      width='150'
+      height='150'
+      alt='avatar'
+    />
+  {{else}}
+    <svg
+      class='bi d-block mx-auto mb-1'
+      width='24'
+      height='24'
+      fill='currentColor'
+      viewBox='0 0 16 16'
+    >
+      <path d='M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z' />
+      <path
+        fill-rule='evenodd'
+        d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z'
+      /></svg>
+  {{/if}}
+  <div class='card-body mx-auto'>
+    <div class='input-group mb-2 align-items-center'>
+      <i class='far fa-image fa-lg me-3 fa-fw'></i>
+      <input class='form-control' type='file' id='avatar' />
+    </div>
+    <div class='d-flex flex-row align-items-center mb-1'>
+      <i class='fas fa-user fa-lg me-3 fa-fw'></i>
+      <div class='form-outline flex-fill mb-0'>
+        <input
+          type='text'
+          id='firstName'
+          class='form-control'
+          placeholder='Введите Ваше Имя'
+          value={{cookies.user.firstName}}
+        />
+      </div>
+    </div>
+    <div class='d-flex flex-row align-items-center mb-4'>
+      <i class='fa-lg me-3 fa-fw'></i>
+      <div class='form-outline flex-fill mb-0'>
+        <input
+          type='text'
+          id='lastName'
+          class='form-control'
+          placeholder='Введите Вашу Фамилию'
+          value={{cookies.user.lastName}}
+        />
+      </div>
+    </div>
+    <div class='d-flex flex-row align-items-center mb-4'>
+      <i class='fas fa-envelope fa-lg me-3 fa-fw'></i>
+      <div class='form-outline flex-fill mb-0'>
+        <input
+          type='email'
+          id='email'
+          class='form-control'
+          placeholder='Введите Ваш Email'
+          value={{cookies.user.email}}
+        />
+      </div>
+    </div>
+    <div class='d-flex flex-row align-items-center mb-4'>
+      <i class='fas fa-lock fa-lg me-3 fa-fw'></i>
+      <div class='form-outline flex-fill mb-0'>
+        <input
+          type='password'
+          id='password'
+          class='form-control'
+          placeholder='Введите Ваш пароль'
+        />
+      </div>
+    </div>
+    <div class='d-flex flex-row align-items-center mb-4'>
+      <i class='fas fa-key fa-lg me-3 fa-fw'></i>
+      <div class='form-outline flex-fill mb-0'>
+        <input
+          type='password'
+          id='passwordRepeat'
+          class='form-control'
+          placeholder='Повторите Ваш пароль'
+        />
+      </div>
+    </div>
+    <button id='btnEditProfile' class='btn btn-dark mb-3'>
+      Сохранить
+    </button>
+  </div>
+  <script>
+    const messError = "В форме профиля все поля обязательны для заполнения!";
+    const messSuccess = "Вы успешно отредактировали свой профиль!"; const
+    editProfile = () => { const firstName =
+    document.getElementById("firstName"); const lastName =
+    document.getElementById("lastName"); const email =
+    document.getElementById("email"); const password =
+    document.getElementById("password"); const passwordRepeat =
+    document.getElementById("passwordRepeat"); const avatar =
+    document.getElementById("avatar"); console.log("!!!"); if (firstName.value
+    !== "" && lastName.value !== "" && email.value !== "" && password.value !==
+    "" && passwordRepeat.value !== "") { if (password.value !==
+    passwordRepeat.value) { alert("Пароли не совпадают!"); } else { const
+    formdata = new FormData(); formdata.append("firstName", firstName.value);
+    formdata.append("lastName", lastName.value); formdata.append("email",
+    email.value); formdata.append("password", password.value);
+    formdata.append("role", "admin"); if (avatar?.files[0]) {
+    formdata.append("avatar", avatar.files[0],
+    "http://localhost:3000/user-static/" + avatar.value); } const requestOptions
+    = { method: 'POST', body: formdata, redirect: 'follow' }; const url =
+    "http://localhost:3000/profile/edit/?idUser=1"; fetch(url, requestOptions)
+    .then(response => response.text()) .then(result => { const raw =
+    JSON.stringify({ "username": email.value, "password": password.value });
+    const myHeaders = new Headers(); myHeaders.append("Content-Type",
+    "application/json"); const requestOptions = { method: 'POST', headers:
+    myHeaders, body: raw, redirect: 'follow' };
+    fetch("http://localhost:3000/auth/login", requestOptions) .then(response =>
+    response.text()) .then(result => { const data = JSON.parse(result); if
+    (data?.access_token) { const myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + data.access_token); const
+    requestOptions = { method: 'GET', headers: myHeaders, redirect: 'follow' };
+    fetch("http://localhost:3000/auth/user", requestOptions) .then(response =>
+    response.text()) .then(result => { const data = JSON.parse(result);
+    console.log(data); localStorage.setItem('user', JSON.stringify({id: data.id,
+    firstName: data.firstName, lastName: data.lastName, avatar: data.avatar,
+    exp: data.exp })); window.location.reload();}) .catch(error =>
+    console.log('error', error)); } }) .catch(error => console.log('error',
+    error)); }) .catch(error => console.log('error', error));
+    console.log("Hello!"); } } else { alert(messError)}; } ;
+    document.getElementById("btnEditProfile").addEventListener("click",
+    editProfile);
+  </script>
+</div>
